@@ -1,7 +1,7 @@
 import os, shutil
 import git, pytest
 from pyspark import SparkContext
-from .def_count import get_files, count
+from def_count import get_files, count
 
 def onerror(func, path, exc_info):
     """
@@ -39,7 +39,7 @@ def workspace():
 
 
 def test_get_files(workspace):
-    assert len(get_files(workspace)) == 3
+    assert len(get_files(workspace)) == 4
 
 def test_count(workspace):
     ls_files = get_files(workspace)

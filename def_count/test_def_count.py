@@ -1,7 +1,7 @@
 import os, shutil
 import git, pytest
 from pyspark import SparkContext
-from .def_count import get_files, count
+from def_count import get_files, count
 
 def onerror(func, path, exc_info):
     """
@@ -30,25 +30,23 @@ def workspace():
     path = os.path.join(os.getcwd(), '__downloaded__')
     if not os.path.exists(path):
         os.mkdir(path)
-    res = git.Repo.clone_from('https://github.com/a-domingu/download_repos', path, depth = 1)
+    try:
+        git.Repo.clone_from('https://github.com/a-domingu/download_repos', path, depth = 1)
+    except Exception:
+        pass
     yield path
     try:
         shutil.rmtree(path, onerror=onerror)
     except Exception as ex:
         print(ex)
 
-
 def test_get_files(workspace):
     assert len(get_files(workspace)) == 3
+    assert os.path.join(os.getcwd(), '__downloaded__', 'get_repos', 'repos.py') in get_files(workspace)
 
 def test_count(workspace):
     ls_files = get_files(workspace)
-    sc = SparkContext
-    num = 0
-    #'ls_files' should contain the path for each *.py file in __downloaded__
-    for file in ls_files:
-        rdd = sc.textFile(file)
-        num += rdd.filter(lambda x: 'def' in x).count()
+    num = count(ls_files)
     assert num == 11
 
 

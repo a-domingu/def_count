@@ -9,7 +9,6 @@ Then, the 'count' function will receive this list of files and it will count all
 '''
 
 def _find_def(line):
-    #because it's a filter function, it should return a boolean
     ls_words = line.split(' ')
     return 'def' in ls_words
 
@@ -20,10 +19,9 @@ def get_files(path):
     for i in os.walk(path):
         directory, ls_files = i[0], i[2]
         for file in ls_files:
-            if file.endswith('.py'):
-                if not file.startswith('_'):
-                    path = os.path.join(directory, file)
-                    ls.append(path)
+            if file.endswith('.py') and not file.startswith('_'):
+                path = os.path.join(directory, file)
+                ls.append(path)
     return ls
 
 def count(ls_files):
@@ -35,8 +33,3 @@ def count(ls_files):
             num += rdd.filter(_find_def).count()
     return num
 
-'''
-path = os.path.join(os.getcwd(), 'prueba.py') #el archivo sí existe
-num = count([path, path])
-print(num)
-'''

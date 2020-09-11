@@ -10,6 +10,7 @@ pylint = "*"
 pyspark = "*"
 gitpython = "*"
 pytest = "*"
+click = "*"
 
 [requires]
 python_version = "3.8"
